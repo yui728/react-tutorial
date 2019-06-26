@@ -21,29 +21,17 @@ function Square(props) {
     }
   
     render() {
-        const squareCount = 9;
         const boardColumns = 3;
         const boardRows = 3;
-        const squares = Array(squareCount).fill(null).map((_, i) => {
-            {this.renderSquare(i)}
-        });
       return (
         <div>
-          <div className="board-row">
-            {this.renderSquare(0)}
-            {this.renderSquare(1)}
-            {this.renderSquare(2)}
-          </div>
-          <div className="board-row">
-            {this.renderSquare(3)}
-            {this.renderSquare(4)}
-            {this.renderSquare(5)}
-          </div>
-          <div className="board-row">
-            {this.renderSquare(6)}
-            {this.renderSquare(7)}
-            {this.renderSquare(8)}
-          </div>
+          {Array(boardRows).fill(null).map((_, i) => (
+            <div className="board-row">
+              {Array(boardColumns).fill(null).map((_, j) =>(
+                this.renderSquare(i * 2 + j)
+              ))}
+            </div>
+          ))}
         </div>
       );
     }
