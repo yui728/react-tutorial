@@ -9,13 +9,21 @@ function Square(props) {
       </button>
     );
   }
+
+  function Toggle(props) {
+      const order = props.order === "asc" ? "▲" : "▼";
+      return(
+        <button onClick={props.onClick} className={props.order}>{order}</button>
+      )
+  }
   
   class Board extends React.Component {
-    renderSquare(i) {
+    renderSquare(i, col, row) {
       return (
         <Square
+          key = {i}
           value={this.props.squares[i]}
-          onClick={() => this.props.onClick(i)}
+          onClick={() => this.props.onClick(i, col, row)}
         />
       );
     }
@@ -25,10 +33,11 @@ function Square(props) {
         const boardRows = 3;
       return (
         <div>
-          {Array(boardRows).fill(null).map((_, i) => (
-            <div className="board-row">
+          {Array(boardRows).fill(null).map((_, i) => (            
+            <div className="board-row" key={i}>
               {Array(boardColumns).fill(null).map((_, j) =>(
-                this.renderSquare(i * 2 + j)
+                // console.log("key:" + (i * boardColumns + j)),
+                this.renderSquare((i * boardColumns + j), j, i)
               ))}
             </div>
           ))}
@@ -50,15 +59,15 @@ function Square(props) {
         ],
         stepNumber: 0,
         xIsNext: true,
+        histroyOrder: "asc",
       };
     }
   
-    handleClick(i) {
+    handleClick(i, col, row) {
+      // console.log("handleClick: i="+i + ", stepNumber:" + this.state.stepNumber + ", col:" + col + ", row:" + row)
       const history = this.state.history.slice(0, this.state.stepNumber + 1);
       const current = history[history.length - 1];
       const squares = current.squares.slice();
-      const col = i % 3 + 1;
-      const row = Math.floor(i / 3) + 1;
       if (calculateWinner(squares) || squares[i]) {
         return;
       }
@@ -82,8 +91,15 @@ function Square(props) {
         xIsNext: (step % 2) === 0
       });
     }
+
+    handleChangeOrder(order) {
+      this.setState({
+        histroyOrder: order
+      });
+    }
   
     render() {
+      // console.log("historyOrder:" + this.state.histroyOrder)
       const history = this.state.history;
       const current = history[this.state.stepNumber];
       const winner = calculateWinner(current.squares);
@@ -113,12 +129,24 @@ function Square(props) {
           <div className="game-board">
             <Board
               squares={current.squares}
-              onClick={i => this.handleClick(i)}
+              onClick={(i, col, row) => this.handleClick(i, col, row)}
             />
           </div>
           <div className="game-info">
             <div>{status}</div>
-            <ol>{moves}</ol>
+            <ol>{this.state.histroyOrder === "asc" ? moves : moves.reverse()}</ol>
+          </div>
+          <div className="toggle-area">
+            <Toggle
+              key = "asc"
+              order={"asc"} 
+              onClick={() => this.handleChangeOrder("asc")}
+            />
+            <Toggle
+              key = "desc"
+              order={"desc"} 
+              onClick={() => this.handleChangeOrder("desc")}
+            />
           </div>
         </div>
       );

@@ -52,3 +52,18 @@ body {
   .current-select{
       font-weight: bold;
   }
+
+  .toggle-area{
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 1em;
+  }
+
+  .toggle-area .asc {
+    flex-grow: 1;
+  }
+
+  .toggle-area .desc {
+    flex-grow: 1;
+  }
