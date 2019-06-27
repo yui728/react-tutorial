@@ -35,6 +35,10 @@ body {
   .square:focus {
     outline: none;
   }
+
+  .checkmate {
+    background: #FFFF66;
+  }
   
   .kbd-navigation .square:focus {
     background: #ddd;
@@ -60,10 +64,6 @@ body {
     margin: 1em;
   }
 
-  .toggle-area .asc {
-    flex-grow: 1;
-  }
-
-  .toggle-area .desc {
+  .toggle-area .asc,.desc {
     flex-grow: 1;
   }

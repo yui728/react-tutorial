@@ -3,8 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 function Square(props) {
+  let className = "square";
+  if (props.isCheckmate) className += " checkmate";
     return (
-      <button className="square" onClick={props.onClick}>
+      <button className={className} onClick={props.onClick}>
         {props.value}
       </button>
     );
@@ -19,11 +21,13 @@ function Square(props) {
   
   class Board extends React.Component {
     renderSquare(i, col, row) {
+      const isCheckmate = (col === this.props.checkmate.col && row === this.props.checkmate.row)
       return (
         <Square
           key = {i}
           value={this.props.squares[i]}
           onClick={() => this.props.onClick(i, col, row)}
+          isCheckmate={isCheckmate}
         />
       );
     }
@@ -103,6 +107,7 @@ function Square(props) {
       const history = this.state.history;
       const current = history[this.state.stepNumber];
       const winner = calculateWinner(current.squares);
+      let checkmateSquare = {"col": -1, "row": -1}
   
       const moves = history.map((step, move) => {
         const desc = move ?
@@ -120,6 +125,8 @@ function Square(props) {
       let status;
       if (winner) {
         status = "Winner: " + winner;
+        checkmateSquare.col = current.col;
+        checkmateSquare.row = current.row;
       } else {
         status = "Next player: " + (this.state.xIsNext ? "X" : "O");
       }
@@ -130,6 +137,7 @@ function Square(props) {
             <Board
               squares={current.squares}
               onClick={(i, col, row) => this.handleClick(i, col, row)}
+              checkmate={checkmateSquare}
             />
           </div>
           <div className="game-info">
