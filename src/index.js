@@ -33,8 +33,8 @@ function Square(props) {
     }
   
     render() {
-        const boardColumns = 3;
-        const boardRows = 3;
+        const boardColumns = this.props.columns;
+        const boardRows = this.props.rows;
       return (
         <div>
           {Array(boardRows).fill(null).map((_, i) => (            
@@ -51,6 +51,8 @@ function Square(props) {
   }
   
   class Game extends React.Component {
+    BOARD_COLUMNS = 3;
+    BOARD_ROWS = 3;
     constructor(props) {
       super(props);
       this.state = {
@@ -128,7 +130,11 @@ function Square(props) {
         checkmateSquare.col = current.col;
         checkmateSquare.row = current.row;
       } else {
-        status = "Next player: " + (this.state.xIsNext ? "X" : "O");
+        // 引き分け判定
+        console.log("history-length:" + history.length)
+        status = caluclateEven(history, this.BOARD_COLUMNS, this.BOARD_ROWS) ?
+                "Even" :
+                "Next player: " + (this.state.xIsNext ? "X" : "O");
       }
   
       return (
@@ -138,6 +144,8 @@ function Square(props) {
               squares={current.squares}
               onClick={(i, col, row) => this.handleClick(i, col, row)}
               checkmate={checkmateSquare}
+              columns={this.BOARD_COLUMNS}
+              rows={this.BOARD_ROWS}
             />
           </div>
           <div className="game-info">
@@ -183,5 +191,9 @@ function Square(props) {
       }
     }
     return null;
+  }
+
+  function caluclateEven(history, columns, rows) {
+    return history.length >= (columns * rows + 1)
   }
   
