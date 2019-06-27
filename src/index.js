@@ -1,5 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import ListGroup from 'react-bootstrap/ListGroup';
+import ListGroupItem from 'react-bootstrap/ListGroupItem';
+
+import "bootstrap/dist/css/bootstrap.min.css";
 import './index.css';
 
 function Square(props) {
@@ -15,7 +21,7 @@ function Square(props) {
   function Toggle(props) {
       const order = props.order === "asc" ? "▲" : "▼";
       return(
-        <button onClick={props.onClick} className={props.order}>{order}</button>
+        <Button onClick={props.onClick} className={props.order} type="button" active={props.active}>{order}</Button>
       )
   }
   
@@ -116,11 +122,11 @@ function Square(props) {
           'Go to move #' + move + ' col:' +  step.col + ' row:' + step.row:
           'Go to game start';
 
-        const currentSelect = (this.state.stepNumber === move) ? "current-select" : ""
+        const currentSelect = (this.state.stepNumber === move) ? "current-select active" : ""
         return (
-          <li key={move}>
-            <button onClick={() => this.jumpTo(move)} className={currentSelect}>{desc}</button>
-          </li>
+          <ListGroupItem key={move} as="button" onClick={() => this.jumpTo(move)} className={currentSelect} >
+            {desc}
+          </ListGroupItem>
         );
       });
   
@@ -131,7 +137,7 @@ function Square(props) {
         checkmateSquare.row = current.row;
       } else {
         // 引き分け判定
-        console.log("history-length:" + history.length)
+        // console.log("history-length:" + history.length)
         status = caluclateEven(history, this.BOARD_COLUMNS, this.BOARD_ROWS) ?
                 "Even" :
                 "Next player: " + (this.state.xIsNext ? "X" : "O");
@@ -150,20 +156,22 @@ function Square(props) {
           </div>
           <div className="game-info">
             <div>{status}</div>
-            <ol>{this.state.histroyOrder === "asc" ? moves : moves.reverse()}</ol>
+            <ListGroup as="ol">{this.state.histroyOrder === "asc" ? moves : moves.reverse()}</ListGroup>
           </div>
-          <div className="toggle-area">
+          <ButtonGroup vertical={true} className="toggle-area">
             <Toggle
               key = "asc"
               order={"asc"} 
               onClick={() => this.handleChangeOrder("asc")}
+              active={this.state.histroyOrder === "asc"}
             />
             <Toggle
               key = "desc"
               order={"desc"} 
               onClick={() => this.handleChangeOrder("desc")}
+              active={this.state.histroyOrder === "desc"}
             />
-          </div>
+          </ButtonGroup>
         </div>
       );
     }
