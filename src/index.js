@@ -3,13 +3,14 @@ import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Alert from 'react-bootstrap/Alert';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import './index.css';
 
-function Square(props) {
-  let className = "square";
-  if (props.isCheckmate) className += " checkmate";
+  function Square(props) {
+    let className = "square";
+    if (props.isCheckmate) className += " checkmate";
     return (
       <button className={className} onClick={props.onClick}>
         {props.value}
@@ -18,12 +19,12 @@ function Square(props) {
   }
 
   function Toggle(props) {
-      const order = props.order === "asc" ? "▲" : "▼";
-      return(
-        <Button onClick={props.onClick} className={props.order} type="button" active={props.active} variant="outline-primary">{order}</Button>
-      )
+    const order = props.order === "asc" ? "▲" : "▼";
+    return(
+      <Button onClick={props.onClick} className={props.order} type="button" active={props.active} variant="outline-primary">{order}</Button>
+    )
   }
-  
+
   class Board extends React.Component {
     renderSquare(i, col, row) {
       const isCheckmate = (col === this.props.checkmate.col && row === this.props.checkmate.row)
@@ -45,7 +46,6 @@ function Square(props) {
           {Array(boardRows).fill(null).map((_, i) => (            
             <div className="board-row" key={i}>
               {Array(boardColumns).fill(null).map((_, j) =>(
-                // console.log("key:" + (i * boardColumns + j)),
                 this.renderSquare((i * boardColumns + j), j, i)
               ))}
             </div>
@@ -75,11 +75,10 @@ function Square(props) {
     }
   
     handleClick(i, col, row) {
-      // console.log("handleClick: i="+i + ", stepNumber:" + this.state.stepNumber + ", col:" + col + ", row:" + row)
       const history = this.state.history.slice(0, this.state.stepNumber + 1);
       const current = history[history.length - 1];
       const squares = current.squares.slice();
-      if (calculateWinner(squares) || squares[i]) {
+      if (calculateWinner(squares) ||  squares[i]) {
         return;
       }
       squares[i] = this.state.xIsNext ? "X" : "O";
@@ -110,7 +109,6 @@ function Square(props) {
     }
   
     render() {
-      // console.log("historyOrder:" + this.state.histroyOrder)
       const history = this.state.history;
       const current = history[this.state.stepNumber];
       const winner = calculateWinner(current.squares);
@@ -130,16 +128,20 @@ function Square(props) {
       });
   
       let status;
+      let isEndGame = false;
       if (winner) {
         status = "Winner: " + winner;
         checkmateSquare.col = current.col;
         checkmateSquare.row = current.row;
+        isEndGame = true;
       } else {
         // 引き分け判定
-        // console.log("history-length:" + history.length)
-        status = caluclateEven(history, this.BOARD_COLUMNS, this.BOARD_ROWS) ?
-                "Even" :
-                "Next player: " + (this.state.xIsNext ? "X" : "O");
+        if(caluclateEven(history, this.BOARD_COLUMNS, this.BOARD_ROWS)) {
+          status = "Even";
+          isEndGame = true;
+        } else {
+          status = "Next player: " + (this.state.xIsNext ? "X" : "O");
+        }
       }
   
       return (
@@ -154,7 +156,7 @@ function Square(props) {
             />
           </div>
           <div className="game-info">
-            <div>{status}</div>
+            <Alert variant={isEndGame ? "success" : "primary"}>{status}</Alert>
             <ListGroup as="ol">{this.state.histroyOrder === "asc" ? moves : moves.reverse()}</ListGroup>
           </div>
           <ButtonGroup vertical={true} className="toggle-area">
