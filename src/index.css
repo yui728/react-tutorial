@@ -48,6 +48,16 @@ body {
     display: flex;
     flex-direction: row;
   }
+
+  .game-board > div {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .game-board .board-row {
+    display: flex;
+    flex-direction: row;
+  }
   
   .game-info {
     margin-left: 20px;

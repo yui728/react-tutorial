@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ListGroup from 'react-bootstrap/ListGroup';
-import ListGroupItem from 'react-bootstrap/ListGroupItem';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import './index.css';
@@ -21,7 +20,7 @@ function Square(props) {
   function Toggle(props) {
       const order = props.order === "asc" ? "▲" : "▼";
       return(
-        <Button onClick={props.onClick} className={props.order} type="button" active={props.active}>{order}</Button>
+        <Button onClick={props.onClick} className={props.order} type="button" active={props.active} variant="outline-primary">{order}</Button>
       )
   }
   
@@ -124,9 +123,9 @@ function Square(props) {
 
         const currentSelect = (this.state.stepNumber === move) ? "current-select active" : ""
         return (
-          <ListGroupItem key={move} as="button" onClick={() => this.jumpTo(move)} className={currentSelect} >
+          <ListGroup.Item key={move} as="button" onClick={() => this.jumpTo(move)} className={currentSelect} >
             {desc}
-          </ListGroupItem>
+          </ListGroup.Item>
         );
       });
   
